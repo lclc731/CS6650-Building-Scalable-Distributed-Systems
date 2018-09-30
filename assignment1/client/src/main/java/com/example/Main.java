@@ -22,6 +22,7 @@ public class Main {
         String port = args[3];
 
         String uri = "http://" + ipAddress + ":" + port + "/simple-service-webapp/rest/myresource";
+
         MultiThreadCall multiThreadCall = new MultiThreadCall(iterationNumPerThread, maxThreadNum, uri);
         multiThreadCall.start();
     }
