@@ -3,6 +3,7 @@ package com.example;
 import com.example.dal.ConnectionManager;
 import com.example.dal.StepCountsDao;
 import com.example.dal.UtilDao;
+import com.example.model.StepCounts;
 
 import java.sql.SQLException;
 
@@ -16,13 +17,13 @@ public class test {
         StepCountsDao stepCountsDao = StepCountsDao.getInstance();
         UtilDao utilDao = UtilDao.getInstance();
 
-//        StepCounts stepCounts = new StepCounts(1, 1, 1, 1);
-//        StepCounts stepCounts1 = stepCountsDao.create(stepCounts);
-//        stepCountsDao.create(new StepCounts(1, 2, 1, 2));
-        int count = stepCountsDao.getStepCountByDay(1);
+        StepCounts stepCounts = new StepCounts(1, 1, 1, 1);
+        StepCounts stepCounts1 = stepCountsDao.create(stepCounts);
+        stepCountsDao.create(new StepCounts(1, 2, 1, 2));
+        int count = stepCountsDao.getStepCountByDay(1, 1);
 
-        int count1 = stepCountsDao.getStepCountByDay(2);
-        int count2 = stepCountsDao.getStepCountCurrent();
+        int count1 = stepCountsDao.getStepCountByDay(1, 2);
+        int count2 = stepCountsDao.getStepCountCurrent(1);
 
         utilDao.cleanTable();
         int i = 0;

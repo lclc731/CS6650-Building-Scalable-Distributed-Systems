@@ -35,7 +35,7 @@ public class Fitbit {
     @Path("/current/{userID}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getByUser(@PathParam("userID") String userID) throws SQLException {
-        int sum = stepCountsDao.getStepCountCurrent();
+        int sum = stepCountsDao.getStepCountCurrent(Integer.parseInt(userID));
         return "By User";
     }
 
@@ -45,7 +45,7 @@ public class Fitbit {
     @Produces(MediaType.TEXT_PLAIN)
     public String getByDay(@PathParam("userID") String userID,
                            @PathParam("dayID") String dayID) throws SQLException {
-        int sum = stepCountsDao.getStepCountByDay(Integer.parseInt(dayID));
+        int sum = stepCountsDao.getStepCountByDay(Integer.parseInt(userID), Integer.parseInt(dayID));
         return "By Day";
     }
 

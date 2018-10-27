@@ -58,8 +58,8 @@ public class StepCountsDao {
     /**
      * Get the all the step count of a certain day
      */
-    public int getStepCountByDay(int dayId) throws SQLException {
-        String selectStepCounts = "SELECT StepCount FROM StepCounts WHERE DayId=?;";
+    public int getStepCountByDay(int userId, int dayId) throws SQLException {
+        String selectStepCounts = "SELECT StepCount FROM StepCounts WHERE UserId=? AND DayId=?;";
 
         Connection connection = null;
         PreparedStatement selectStmt = null;
@@ -68,7 +68,8 @@ public class StepCountsDao {
         try {
             connection = connectionManager.getConnection();
             selectStmt = connection.prepareStatement(selectStepCounts);
-            selectStmt.setInt(1, dayId);
+            selectStmt.setInt(1, userId);
+            selectStmt.setInt(2, dayId);
             results = selectStmt.executeQuery();
             while(results.next()) {
                 sum += results.getInt("StepCount");
@@ -93,7 +94,7 @@ public class StepCountsDao {
     /**
      * Get the all the step count of a certain day
      */
-    public int getStepCountCurrent() throws SQLException {
+    public int getStepCountCurrent(int userId) throws SQLException {
         String selectStepCounts = "SELECT DayId " +
                 "FROM StepCounts " +
                 "ORDER BY DayId " +
@@ -125,6 +126,6 @@ public class StepCountsDao {
                 results.close();
             }
         }
-        return getStepCountByDay(sum);
+        return getStepCountByDay(userId, sum);
     }
 }
