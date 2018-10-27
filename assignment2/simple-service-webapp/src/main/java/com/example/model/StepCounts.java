@@ -5,13 +5,13 @@ package com.example.model;
  */
 public class StepCounts {
     protected int userId;
-    protected int day;
+    protected int dayId;
     protected int timeInterval;
     protected int stepCount;
 
     public StepCounts(int userId, int day, int timeInterval, int stepCount) {
         this.userId = userId;
-        this.day = day;
+        this.dayId = day;
         this.timeInterval = timeInterval;
         this.stepCount = stepCount;
     }
@@ -25,12 +25,12 @@ public class StepCounts {
         this.userId = userId;
     }
 
-    public int getDay() {
-        return day;
+    public int getDayId() {
+        return dayId;
     }
 
-    public void setDay(int day) {
-        this.day = day;
+    public void setDayId(int dayId) {
+        this.dayId = dayId;
     }
 
     public int getTimeInterval() {

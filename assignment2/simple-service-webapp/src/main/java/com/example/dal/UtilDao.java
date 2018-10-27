@@ -1,40 +1,39 @@
 package com.example.dal;
 
-import com.example.model.Users;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Created by ChangLiu on 10/25/18.
+ * Created by ChangLiu on 10/27/18.
  */
-public class UsersDao {
+public class UtilDao {
     protected ConnectionManager connectionManager;
 
     // Single pattern: instantiation is limited to one object.
-    private static UsersDao instance = null;
-    protected UsersDao() {
+    private static UtilDao instance = null;
+    protected UtilDao() {
         connectionManager = new ConnectionManager();
     }
-    public static UsersDao getInstance() {
+    public static UtilDao getInstance() {
         if(instance == null) {
-            instance = new UsersDao();
+            instance = new UtilDao();
         }
         return instance;
     }
 
-    public Users create(Users Users) throws SQLException {
+    /**
+     * Create a step count record
+     */
+    public void cleanTable() throws SQLException {
 
-        String insertUser = "INSERT INTO Users(UserName) VALUES(?);";
+        String deleteStepCounts = "DELETE FROM StepCounts;";
         Connection connection = null;
-        PreparedStatement insertStmt = null;
+        PreparedStatement deleteStmt = null;
         try {
             connection = connectionManager.getConnection();
-            insertStmt = connection.prepareStatement(insertUser);
-            insertStmt.setString(1, Users.getUserName());
-            insertStmt.executeUpdate();
-            return Users;
+            deleteStmt = connection.prepareStatement(deleteStepCounts);
+            deleteStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw e;
@@ -42,10 +41,9 @@ public class UsersDao {
             if(connection != null) {
                 connection.close();
             }
-            if(insertStmt != null) {
-                insertStmt.close();
+            if(deleteStmt != null) {
+                deleteStmt.close();
             }
         }
     }
-
 }

@@ -2,7 +2,7 @@ package com.example;
 
 import com.example.dal.ConnectionManager;
 import com.example.dal.StepCountsDao;
-import com.example.model.StepCounts;
+import com.example.dal.UtilDao;
 
 import java.sql.SQLException;
 
@@ -14,10 +14,19 @@ public class test {
 
         ConnectionManager connectionManager = new ConnectionManager();
         StepCountsDao stepCountsDao = StepCountsDao.getInstance();
+        UtilDao utilDao = UtilDao.getInstance();
 
-        StepCounts stepCounts = new StepCounts(1, 1, 1, 1);
-        StepCounts stepCounts1 = stepCountsDao.create(stepCounts);
+//        StepCounts stepCounts = new StepCounts(1, 1, 1, 1);
+//        StepCounts stepCounts1 = stepCountsDao.create(stepCounts);
+//        stepCountsDao.create(new StepCounts(1, 2, 1, 2));
+        int count = stepCountsDao.getStepCountByDay(1);
+
+        int count1 = stepCountsDao.getStepCountByDay(2);
+        int count2 = stepCountsDao.getStepCountCurrent();
+
+        utilDao.cleanTable();
         int i = 0;
+
     }
 
 }
