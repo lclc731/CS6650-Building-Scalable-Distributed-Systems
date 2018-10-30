@@ -41,7 +41,6 @@ public class StepCountsDao {
             insertStmt.setInt(3, stepCounts.getTimeInterval());
             insertStmt.setInt(4, stepCounts.getStepCount());
             insertStmt.executeUpdate();
-            return stepCounts;
         } catch (SQLException e) {
             e.printStackTrace();
             throw e;
@@ -53,6 +52,7 @@ public class StepCountsDao {
                 insertStmt.close();
             }
         }
+        return stepCounts;
     }
 
     /**

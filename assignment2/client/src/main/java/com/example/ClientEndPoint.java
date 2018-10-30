@@ -43,18 +43,4 @@ public class ClientEndPoint {
                 .request()
                 .delete();
     }
-
-//    public String getStatus() throws ClientErrorException {
-//        return client.target(REST_URI)
-//                .request()
-//                .get(String.class);
-//    }
-//
-//    public String postText(String requestEntity) throws
-//            ClientErrorException {
-//        return client
-//                .target(REST_URI)
-//                .request(MediaType.TEXT_PLAIN)
-//                .post(Entity.entity(requestEntity, MediaType.TEXT_PLAIN), String.class);
-//    }
 }

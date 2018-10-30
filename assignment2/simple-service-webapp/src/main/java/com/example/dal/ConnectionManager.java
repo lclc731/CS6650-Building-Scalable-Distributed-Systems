@@ -40,15 +40,15 @@ import java.sql.SQLException;
 public class ConnectionManager {
 
     // User to connect to your database instance. By default, this is "root2".
-    private final String user = "mysqladmin";
+    private final static String MYSQL_USERNAME = "mysqladmin";
     // Password for the user.
-    private final String password = "mysqlpassword";
+    private final static String MYSQL_PASSWORD = "mysqlpassword";
     // URI to your database server. If running on the same machine, then this is "localhost".
-    private final String hostName = "mysql-instance1.cpxpvza17dep.us-west-2.rds.amazonaws.com";
+    private final static String AWS_MYSQL_HOSTNAME = "mysql-instance1.cpxpvza17dep.us-west-2.rds.amazonaws.com";
     // Port to your database server. By default, this is 3307.
-    private final int port= 3306;
+    private final static int AWS_MYSQL_PORT = 3306;
     // Name of the MySQL schema that contains your tables.
-    private final String schema = "bsds";
+    private final static String AWS_MYSQL_SCHEMA = "bsds";
 
     private static DataSource dataSource = setupDataSource();
 
@@ -63,48 +63,12 @@ public class ConnectionManager {
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         }
-        cpds.setJdbcUrl("jdbc:mysql://mysql-instance1.cpxpvza17dep.us-west-2.rds.amazonaws.com:3306/bsds");
-        cpds.setUser("mysqladmin");
-        cpds.setPassword("mysqlpassword");
+        cpds.setJdbcUrl("jdbc:mysql://" + AWS_MYSQL_HOSTNAME + ":" + AWS_MYSQL_PORT + "/" + AWS_MYSQL_SCHEMA);
+        cpds.setUser(MYSQL_USERNAME);
+        cpds.setPassword(MYSQL_PASSWORD);
         cpds.setMinPoolSize(1);
         cpds.setAcquireIncrement(5);
-        cpds.setMaxPoolSize(50);
+        cpds.setMaxPoolSize(60);
         return cpds;
-    }
-
-    /** Get the connection to the database instance. */
-//    public Connection getConnection() throws SQLException {
-//        Connection connection = null;
-//        try {
-//            Properties connectionProperties = new Properties();
-//            connectionProperties.put("user", this.user);
-//            connectionProperties.put("password", this.password);
-//            // Ensure the JDBC driver is loaded by retrieving the runtime Class descriptor.
-//            // Otherwise, Tomcat may have issues loading libraries in the proper order.
-//            // One alternative is calling this in the HttpServlet init() override.
-//            try {
-//                Class.forName("com.mysql.jdbc.Driver");
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//                throw new SQLException(e);
-//            }
-//            connection = DriverManager.getConnection(
-//                    "jdbc:mysql://" + this.hostName + ":" + this.port + "/" + this.schema,
-//                    connectionProperties);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw e;
-//        }
-//        return connection;
-//    }
-
-    /** Close the connection to the database instance. */
-    public void closeConnection(Connection connection) throws SQLException {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        }
     }
 }

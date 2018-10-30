@@ -27,7 +27,6 @@ public class Main {
 
         String uri = "http://" + ipAddress + ":8080/simple-service-webapp/webapi/fitbit";
 
-//        String uri = "https://mpx5u5ssvl.execute-api.us-west-2.amazonaws.com/server-api/myresource";
         MultiThreadCall multiThreadCall = new MultiThreadCall(uri, maxThreadNum, userNumber, dayNumber, testNumber);
         multiThreadCall.start();
     }
