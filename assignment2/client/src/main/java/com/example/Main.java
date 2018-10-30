@@ -13,6 +13,8 @@ public class Main {
     private static final int DEFAULT_TEST_NUMBER = 100;
 
     public static void main(String[] args) throws IOException {
+
+
         String ipAddress = args[0];
         int maxThreadNum = args[1] == null || args[1].length() == 0 ? DEFAULT_MAX_THREAD_NUM :
                 Integer.parseInt(args[1]);
@@ -24,6 +26,7 @@ public class Main {
                 Integer.parseInt(args[4]);
 
         String uri = "http://" + ipAddress + ":8080/simple-service-webapp/webapi/fitbit";
+
 //        String uri = "https://mpx5u5ssvl.execute-api.us-west-2.amazonaws.com/server-api/myresource";
         MultiThreadCall multiThreadCall = new MultiThreadCall(uri, maxThreadNum, userNumber, dayNumber, testNumber);
         multiThreadCall.start();

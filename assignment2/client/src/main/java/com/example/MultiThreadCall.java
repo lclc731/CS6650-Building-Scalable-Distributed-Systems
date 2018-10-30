@@ -1,5 +1,6 @@
 package com.example;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -53,7 +54,9 @@ public class MultiThreadCall {
      * Start execute the MultiThreadCall
      */
     public void start() {
-//        Timestamp startWallTime = new Timestamp(System.currentTimeMillis());
+        clientEndPoint.deleteTable();
+
+        Timestamp startWallTime = new Timestamp(System.currentTimeMillis());
 
         Phase phaseWarmUp = new Phase("Warmup", clientEndPoint, maxThreadNum, userNumber, dayNumber, testNumber);
         phaseWarmUp.run();
@@ -64,18 +67,18 @@ public class MultiThreadCall {
         Phase phaseCooldown = new Phase("Cooldown", clientEndPoint, maxThreadNum, userNumber, dayNumber, testNumber);
         phaseCooldown.run();
 
-//        Timestamp endWallTime = new Timestamp(System.currentTimeMillis());
+        Timestamp endWallTime = new Timestamp(System.currentTimeMillis());
 
         // Calculate
 //        LatencyStatistic latencyStatistic = new LatencyStatistic(latencyList);
 //        latencyStatistic.processStatistic();
 
-//        double totalWallTime = (endWallTime.getTime() - startWallTime.getTime()) / 1000.0;
+        double totalWallTime = (endWallTime.getTime() - startWallTime.getTime()) / 1000.0;
 //        BigDecimal throughput = new BigDecimal(totalRequest / totalWallTime).setScale(2,2);
 //
-//        // Print out all statistic results
-//        System.out.println("===================================================");
-//        System.out.println("Total run time (wall time) for all threads to complete: " + totalWallTime + " seconds");
+        // Print out all statistic results
+        System.out.println("===================================================");
+        System.out.println("Total run time (wall time) for all threads to complete: " + totalWallTime + " seconds");
 //        System.out.println("Total number of requests sent: " + totalRequest);
 //        System.out.println("Total number of Successful responses: " + totalResponse);
 //        System.out.println("Overall throughput across all phases: " + throughput);

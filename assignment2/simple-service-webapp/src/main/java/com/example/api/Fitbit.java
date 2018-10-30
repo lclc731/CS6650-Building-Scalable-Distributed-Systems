@@ -1,6 +1,7 @@
 package com.example.api;
 
 import com.example.dal.StepCountsDao;
+import com.example.dal.UtilDao;
 import com.example.model.StepCounts;
 
 import javax.ws.rs.*;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 @Path("fitbit")
 public class Fitbit {
     StepCountsDao stepCountsDao = StepCountsDao.getInstance();
+    UtilDao utilDao = UtilDao.getInstance();
 
     @POST
     @Path("/{userID}/{dayID}/{timeInterval}/{stepCount}")
@@ -34,28 +36,39 @@ public class Fitbit {
     @GET
     @Path("/current/{userID}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getByUser(@PathParam("userID") String userID) throws SQLException {
+    public int getByUser(@PathParam("userID") String userID) throws SQLException {
         int sum = stepCountsDao.getStepCountCurrent(Integer.parseInt(userID));
-        return "By User";
+        return sum;
     }
 
 
     @GET
     @Path("/single/{userID}/{dayID}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getByDay(@PathParam("userID") String userID,
+    public int getByDay(@PathParam("userID") String userID,
                            @PathParam("dayID") String dayID) throws SQLException {
         int sum = stepCountsDao.getStepCountByDay(Integer.parseInt(userID), Integer.parseInt(dayID));
-        return "By Day";
+        return sum;
     }
 
 
     @GET
     @Path("/range/{userID}/{startDay}/{numDays}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getByRange(@PathParam("userID") String day,
-                             @PathParam("startDay") String timeInterval,
-                             @PathParam("numDays") String stepCount) {
-        return "By Range";
+    public int[] getByRange(@PathParam("userID") String dayID,
+                             @PathParam("startDay") String startDay,
+                             @PathParam("numDays") String numDays) throws SQLException {
+        int[] stepCounts = stepCountsDao.getStepCountCurrent(Integer.parseInt(dayID),
+                Integer.parseInt(startDay), Integer.parseInt(numDays));
+        return stepCounts;
+    }
+
+
+    @DELETE
+    @Path("/delete")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteTable() throws SQLException {
+        utilDao.cleanTable();
+        return "Deleted!";
     }
 }

@@ -39,5 +39,8 @@
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-utils:2.5.0-b42" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.22.0-CR2" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.12" level="project" />
+    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: c3p0:c3p0:0.9.1.2" level="project" />
   </component>
 </module>

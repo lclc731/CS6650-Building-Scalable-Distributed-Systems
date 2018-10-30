@@ -37,6 +37,12 @@ public class ClientEndPoint {
                 .get(Integer.class);
     }
 
+    public void deleteTable() {
+        String deleteTableURI = REST_URI + "/delete";
+        client.target(deleteTableURI)
+                .request()
+                .delete();
+    }
 
 //    public String getStatus() throws ClientErrorException {
 //        return client.target(REST_URI)

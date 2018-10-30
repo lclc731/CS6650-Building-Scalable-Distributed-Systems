@@ -39,13 +39,15 @@ public class Phase {
                 this.intervalEnd = 7;
                 break;
             case "Peak":
+                this.threads = threadNum;
                 this.intervalStart = 8;
                 this.intervalEnd = 18;
                 break;
             case "Cooldown":
+                this.threads = threadNum / 4;
                 this.intervalStart = 19;
                 this.intervalEnd = 23;
-                this.threads = threadNum / 4;
+
         }
     }
 
@@ -56,7 +58,8 @@ public class Phase {
         System.out.println(phaseType + ": " + threads + " threads running ….");
 
         final CountDownLatch latch = new CountDownLatch(threads);
-        final int iterations = this.testNum * (this.intervalEnd - this.intervalStart + 1);
+        final int iterations = testNum * (intervalEnd - intervalStart + 1);
+        System.out.println(iterations);
 
         try {
             for (int i = 0; i < this.threads; i++) {

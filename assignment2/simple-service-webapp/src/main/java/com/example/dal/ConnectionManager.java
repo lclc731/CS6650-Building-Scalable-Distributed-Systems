@@ -3,10 +3,13 @@ package com.example.dal;
 /**
  * Created by ChangLiu on 10/25/18.
  */
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 /**
  * Use ConnectionManager to connect to your database instance.
@@ -47,31 +50,53 @@ public class ConnectionManager {
     // Name of the MySQL schema that contains your tables.
     private final String schema = "bsds";
 
-    /** Get the connection to the database instance. */
-    public Connection getConnection() throws SQLException {
-        Connection connection = null;
-        try {
-            Properties connectionProperties = new Properties();
-            connectionProperties.put("user", this.user);
-            connectionProperties.put("password", this.password);
-            // Ensure the JDBC driver is loaded by retrieving the runtime Class descriptor.
-            // Otherwise, Tomcat may have issues loading libraries in the proper order.
-            // One alternative is calling this in the HttpServlet init() override.
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                throw new SQLException(e);
-            }
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + this.hostName + ":" + this.port + "/" + this.schema,
-                    connectionProperties);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return connection;
+    private static DataSource dataSource = setupDataSource();
+
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
+
+    private static DataSource setupDataSource() {
+        ComboPooledDataSource cpds = new ComboPooledDataSource();
+        try {
+            cpds.setDriverClass("com.mysql.jdbc.Driver");
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
+        cpds.setJdbcUrl("jdbc:mysql://mysql-instance1.cpxpvza17dep.us-west-2.rds.amazonaws.com:3306/bsds");
+        cpds.setUser("mysqladmin");
+        cpds.setPassword("mysqlpassword");
+        cpds.setMinPoolSize(1);
+        cpds.setAcquireIncrement(5);
+        cpds.setMaxPoolSize(50);
+        return cpds;
+    }
+
+    /** Get the connection to the database instance. */
+//    public Connection getConnection() throws SQLException {
+//        Connection connection = null;
+//        try {
+//            Properties connectionProperties = new Properties();
+//            connectionProperties.put("user", this.user);
+//            connectionProperties.put("password", this.password);
+//            // Ensure the JDBC driver is loaded by retrieving the runtime Class descriptor.
+//            // Otherwise, Tomcat may have issues loading libraries in the proper order.
+//            // One alternative is calling this in the HttpServlet init() override.
+//            try {
+//                Class.forName("com.mysql.jdbc.Driver");
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//                throw new SQLException(e);
+//            }
+//            connection = DriverManager.getConnection(
+//                    "jdbc:mysql://" + this.hostName + ":" + this.port + "/" + this.schema,
+//                    connectionProperties);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//        return connection;
+//    }
 
     /** Close the connection to the database instance. */
     public void closeConnection(Connection connection) throws SQLException {

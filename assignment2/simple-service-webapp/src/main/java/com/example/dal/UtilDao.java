@@ -27,7 +27,7 @@ public class UtilDao {
      */
     public void cleanTable() throws SQLException {
 
-        String deleteStepCounts = "DELETE FROM StepCounts;";
+        String deleteStepCounts = "TRUNCATE TABLE StepCounts;";
         Connection connection = null;
         PreparedStatement deleteStmt = null;
         try {
