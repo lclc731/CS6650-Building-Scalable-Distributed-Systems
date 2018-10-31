@@ -1,6 +1,7 @@
 package com.example;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,23 +22,7 @@ public class MultiThreadCall {
     private int dayNumber;
     private int testNumber;
 
-    private int totalRequest = 0;
-    private int totalResponse = 0;
-    private List<Long> latencyList;
-
     private ClientEndPoint clientEndPoint;
-
-    public synchronized void incrementTotalRequest () {
-        totalRequest++;
-    }
-
-    public synchronized void incrementTotalResponse () {
-        totalResponse++;
-    }
-
-    public synchronized void addLatency(long latency) {
-        latencyList.add(latency);
-    }
 
     /**
      * Constructor of MultiThreadCall
@@ -69,17 +54,41 @@ public class MultiThreadCall {
 
         Timestamp endWallTime = new Timestamp(System.currentTimeMillis());
 
+        int totalRequest = phaseWarmUp.getTotalRequest() + phaseLoading.getTotalRequest()
+                + phasePeak.getTotalRequest() + phaseCooldown.getTotalRequest();
+        List<Double> totalLatency = new ArrayList<>();
+        totalLatency.addAll(phaseWarmUp.getLatencyList());
+        totalLatency.addAll(phaseLoading.getLatencyList());
+        totalLatency.addAll(phasePeak.getLatencyList());
+        totalLatency.addAll(phaseCooldown.getLatencyList());
+
+        List<Long> requestList = new ArrayList<>();
+        requestList.addAll(phaseWarmUp.getRequestTimeList());
+        requestList.addAll(phaseLoading.getRequestTimeList());
+        requestList.addAll(phasePeak.getRequestTimeList());
+        requestList.addAll(phaseCooldown.getRequestTimeList());
+
         // Calculate
-//        LatencyStatistic latencyStatistic = new LatencyStatistic(latencyList);
-//        latencyStatistic.processStatistic();
+        LatencyStatistic latencyStatistic = new LatencyStatistic(totalRequest, totalLatency, requestList);
+        latencyStatistic.processStatistic();
+
+        int meanThroughput = latencyStatistic.getMeanThroughput();
+        int nintyFivePercentileThroughput = latencyStatistic.getNintyFivePercentileThroughput();
+        int nintyNinePercentileThroughput = latencyStatistic.getNintyNinePercentileThroughput();
 
         double totalWallTime = (endWallTime.getTime() - startWallTime.getTime()) / 1000.0;
+
+
 //        BigDecimal throughput = new BigDecimal(totalRequest / totalWallTime).setScale(2,2);
 //
         // Print out all statistic results
         System.out.println("===================================================");
         System.out.println("Total run time (wall time) for all threads to complete: " + totalWallTime + " seconds");
-//        System.out.println("Total number of requests sent: " + totalRequest);
+        System.out.println("Total number of requests sent: " + totalRequest);
+        System.out.println("Mean throughput is: " + meanThroughput);
+        System.out.println("95th percentile throughput is: " + nintyFivePercentileThroughput);
+        System.out.println("99th percentile throughput is: " + nintyNinePercentileThroughput);
+
 //        System.out.println("Total number of Successful responses: " + totalResponse);
 //        System.out.println("Overall throughput across all phases: " + throughput);
 //        System.out.println("Mean latency is: " + latencyStatistic.getMeanLatency() / 1000.0 + " seconds. "
@@ -87,6 +96,5 @@ public class MultiThreadCall {
 //        System.out.println("99th percentile latency is: " + latencyStatistic.getNintyNinePercentile() / 1000.0 + " seconds. "
 //                + "95th percentile latency is: " + latencyStatistic.getNintyFivePercentile() / 1000.0 + " seconds.");
     }
-
 
 }

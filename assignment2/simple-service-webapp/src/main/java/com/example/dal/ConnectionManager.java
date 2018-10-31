@@ -67,8 +67,18 @@ public class ConnectionManager {
         cpds.setUser(MYSQL_USERNAME);
         cpds.setPassword(MYSQL_PASSWORD);
         cpds.setMinPoolSize(1);
-        cpds.setAcquireIncrement(5);
+        cpds.setAcquireIncrement(1);
         cpds.setMaxPoolSize(60);
         return cpds;
+    }
+
+    /** Close the connection to the database instance. */
+    public void closeConnection() throws SQLException {
+        try {
+            dataSource.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

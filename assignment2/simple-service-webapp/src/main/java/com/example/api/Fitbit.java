@@ -58,7 +58,7 @@ public class Fitbit {
     public int[] getByRange(@PathParam("userID") String dayID,
                              @PathParam("startDay") String startDay,
                              @PathParam("numDays") String numDays) throws SQLException {
-        int[] stepCounts = stepCountsDao.getStepCountCurrent(Integer.parseInt(dayID),
+        int[] stepCounts = stepCountsDao.getStepCountByRange(Integer.parseInt(dayID),
                 Integer.parseInt(startDay), Integer.parseInt(numDays));
         return stepCounts;
     }

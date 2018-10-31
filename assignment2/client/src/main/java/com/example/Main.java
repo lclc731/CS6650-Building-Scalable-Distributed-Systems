@@ -13,8 +13,6 @@ public class Main {
     private static final int DEFAULT_TEST_NUMBER = 100;
 
     public static void main(String[] args) throws IOException {
-
-
         String ipAddress = args[0];
         int maxThreadNum = args[1] == null || args[1].length() == 0 ? DEFAULT_MAX_THREAD_NUM :
                 Integer.parseInt(args[1]);

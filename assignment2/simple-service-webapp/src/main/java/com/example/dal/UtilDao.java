@@ -26,7 +26,6 @@ public class UtilDao {
      * Create a step count record
      */
     public void cleanTable() throws SQLException {
-
         String deleteStepCounts = "TRUNCATE TABLE StepCounts;";
         Connection connection = null;
         PreparedStatement deleteStmt = null;

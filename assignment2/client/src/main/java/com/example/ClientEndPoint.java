@@ -16,9 +16,9 @@ public class ClientEndPoint {
         REST_URI = uri;
     }
 
-    public void postStepCount(int userId, int dayId, int interval, int stepCount) {
+    public String postStepCount(int userId, int dayId, int interval, int stepCount) {
         String postStepCountURI = REST_URI + "/" + userId + "/" + dayId + "/" + interval + "/" + stepCount;
-        client.target(postStepCountURI)
+        return client.target(postStepCountURI)
                 .request(MediaType.TEXT_PLAIN)
                 .post(Entity.entity("", MediaType.TEXT_PLAIN), String.class);
     }

@@ -1,70 +1,70 @@
 package com.example;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Created by ChangLiu on 9/29/18.
  */
 public class LatencyStatistic {
-    private long sumLatencies;
-    private long medianLatency;
-    private long meanLatency;
-    private long nintyNinePercentile;
-    private long nintyFivePercentile;
+    private int meanThroughput;
+    private int nintyNinePercentileThroughput;
+    private int nintyFivePercentileThroughput;
 
-    private PriorityQueue<Long> queue = new PriorityQueue<>(new Comparator<Long>() {
-        @Override
-        public int compare(Long o1, Long o2) {
-            return (int) (o2 - o1);
-        }
-    });
+    private List<Double> latencyList;
+    private List<Long> requestTimeList;
+    private int totalRequestNum;
 
-    public LatencyStatistic(List<Long> latencyList) {
-        for (Long latency : latencyList) {
-            queue.offer(latency);
-        }
+    public LatencyStatistic(int totalRequestNum, List<Double> latencyList, List<Long> requestTimeList) {
+        this.totalRequestNum = totalRequestNum;
+        this.latencyList = latencyList;
+        this.requestTimeList = requestTimeList;
     }
 
     public void processStatistic() {
-        int total = queue.size();
-        int nintyNineTotal = (int) (total * 0.01);
-        int nintyFiveTotal = (int) (total * 0.05);
-        int medianTotal = total / 2;
-
-        for (int i = 1; i <= total; i++) {
-            long cur = queue.poll();
-            if (i == nintyNineTotal) {
-                nintyNinePercentile = cur;
-            } else if (i == nintyFiveTotal) {
-                nintyFivePercentile = cur;
-            } else if (i == medianTotal) {
-                medianLatency = cur;
-            }
-            sumLatencies += cur;
+        if (requestTimeList == null || requestTimeList.size() == 0) {
+            throw new IllegalArgumentException("No request to process.");
         }
-        meanLatency = sumLatencies / total;
+
+        long minTime = Long.MAX_VALUE;
+        Map<Long, Integer> requestMap = new HashMap<>();
+
+        for (Long requestTime : requestTimeList) {
+            requestMap.put(requestTime, requestMap.getOrDefault(requestTime, 0) + 1);
+            minTime = minTime < requestTime ? minTime : requestTime;
+        }
+
+        List<Long> keyList = new ArrayList<>(requestMap.keySet());
+        Collections.sort(keyList);
+
+        CsvFileWriter csvFileWriter = new CsvFileWriter();
+        csvFileWriter.writeToCSVFile(requestMap, keyList, minTime);
+
+
+        int totalTime = requestMap.size();
+        int nintyNineTotal = (int) (totalTime * 0.01);
+        int nintyFiveTotal = (int) (totalTime * 0.05);
+
+        List<Integer> throughputList = new ArrayList<>();
+        int sumThroughtput = 0;
+        for (long key : keyList) {
+            throughputList.add(requestMap.get(key));
+            sumThroughtput += requestMap.get(key);
+        }
+        Collections.sort(throughputList);
+        meanThroughput = sumThroughtput / totalTime;
+        nintyFivePercentileThroughput = throughputList.get(nintyFiveTotal);
+        nintyNinePercentileThroughput = throughputList.get(nintyNineTotal);
     }
 
-    public long getSumLatencies() {
-        return sumLatencies;
+    public int getMeanThroughput() {
+        return meanThroughput;
     }
 
-    public long getMedianLatency() {
-        return medianLatency;
+    public int getNintyNinePercentileThroughput() {
+        return nintyNinePercentileThroughput;
     }
 
-    public long getMeanLatency() {
-        return meanLatency;
+    public int getNintyFivePercentileThroughput() {
+        return nintyFivePercentileThroughput;
     }
-
-    public long getNintyNinePercentile() {
-        return nintyNinePercentile;
-    }
-
-    public long getNintyFivePercentile() {
-        return nintyFivePercentile;
-    }
-
 }

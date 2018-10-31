@@ -29,7 +29,6 @@ public class StepCountsDao {
      * Create a step count record
      */
     public StepCounts create(StepCounts stepCounts) throws SQLException {
-
         String insertStepCounts = "INSERT IGNORE INTO StepCounts(UserId, DayId, TimeInterval, StepCount) VALUES (?, ?, ?, ?);";
         Connection connection = null;
         PreparedStatement insertStmt = null;
@@ -71,8 +70,6 @@ public class StepCountsDao {
             selectStmt.setInt(1, userId);
             selectStmt.setInt(2, dayId);
             results = selectStmt.executeQuery();
-            System.out.println(results);
-
             while(results.next()) {
                 sum += results.getInt("SUM(StepCount)");
             }
@@ -103,7 +100,6 @@ public class StepCountsDao {
                 "GROUP BY DayId " +
                 "ORDER BY DayId DESC " +
                 "LIMIT 1;";
-
         Connection connection = null;
         PreparedStatement selectStmt = null;
         ResultSet results = null;
@@ -137,11 +133,10 @@ public class StepCountsDao {
      * Get a list of daily step count sum for the User with userId, from a certain
      * start day to a number of days
      */
-    public int[] getStepCountCurrent(int userId, int startDay, int numDays) throws SQLException {
+    public int[] getStepCountByRange(int userId, int startDay, int numDays) throws SQLException {
         String selectStepCounts = "SELECT SUM(StepCount), DayId FROM StepCounts  " +
                 "WHERE UserId=? AND DayId>=? AND DayId<=?" +
                 "GROUP BY DayId;";
-
         Connection connection = null;
         PreparedStatement selectStmt = null;
         ResultSet results = null;
