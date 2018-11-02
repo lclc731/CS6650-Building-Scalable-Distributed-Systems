@@ -21,13 +21,13 @@ public class Phase {
     private int intervalStart, intervalEnd;
 
     private int totalRequest = 0;
-    private List<Double> latencyList = new ArrayList<>();
+    private List<Long> latencyList = new ArrayList<>();
     private List<Long> requestTimeList = new ArrayList<>();
 
     public synchronized void incrementTotalRequest() {
         totalRequest++;
     }
-    public synchronized void addLatency(double latency) {
+    public synchronized void addLatency(long latency) {
         latencyList.add(latency);
     }
     public synchronized void addRequestTime(long time) { requestTimeList.add(time); }
@@ -94,35 +94,35 @@ public class Phase {
                             Timestamp curEnd_1 = new Timestamp(System.currentTimeMillis());
                             incrementTotalRequest();
                             addRequestTime(curStart_1.getTime() / 1000);
-                            addLatency((curEnd_1.getTime() - curStart_1.getTime()) / 1000.0);
+                            addLatency(curEnd_1.getTime() - curStart_1.getTime());
 
                             Timestamp curStart_2 = new Timestamp(System.currentTimeMillis());
                             String s2 = clientEndPoint.postStepCount(users[1], dayNum, intervals[1], stepCounts[1]);
                             Timestamp curEnd_2 = new Timestamp(System.currentTimeMillis());
                             incrementTotalRequest();
                             addRequestTime(curStart_2.getTime() / 1000);
-                            addLatency((curEnd_2.getTime() - curStart_2.getTime()) / 1000.0);
+                            addLatency(curEnd_2.getTime() - curStart_2.getTime());
 
                             Timestamp curStart_3 = new Timestamp(System.currentTimeMillis());
                             int a1 = clientEndPoint.getCurrentDay(users[0]);
                             Timestamp curEnd_3 = new Timestamp(System.currentTimeMillis());
                             incrementTotalRequest();
                             addRequestTime(curStart_3.getTime() / 1000);
-                            addLatency((curEnd_3.getTime() - curStart_3.getTime()) / 1000.0);
+                            addLatency(curEnd_3.getTime() - curStart_3.getTime());
 
                             Timestamp curStart_4 = new Timestamp(System.currentTimeMillis());
                             int a2 = clientEndPoint.getSingleDay(users[1], dayNum);
                             Timestamp curEnd_4 = new Timestamp(System.currentTimeMillis());
                             incrementTotalRequest();
                             addRequestTime(curStart_4.getTime() / 1000);
-                            addLatency((curEnd_4.getTime() - curStart_4.getTime()) / 1000.0);
+                            addLatency(curEnd_4.getTime() - curStart_4.getTime());
 
                             Timestamp curStart_5 = new Timestamp(System.currentTimeMillis());
                             String s3 = clientEndPoint.postStepCount(users[2], dayNum, intervals[2], stepCounts[2]);
                             Timestamp curEnd_5 = new Timestamp(System.currentTimeMillis());
                             incrementTotalRequest();
                             addRequestTime(curStart_5.getTime() / 1000);
-                            addLatency((curEnd_5.getTime() - curStart_5.getTime()) / 1000.0);
+                            addLatency(curEnd_5.getTime() - curStart_5.getTime());
                         }
                         latch.countDown();
                     }
@@ -142,7 +142,7 @@ public class Phase {
         return totalRequest;
     }
 
-    public List<Double> getLatencyList() {
+    public List<Long> getLatencyList() {
         return latencyList;
     }
 

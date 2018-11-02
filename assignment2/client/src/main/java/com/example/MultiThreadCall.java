@@ -43,6 +43,7 @@ public class MultiThreadCall {
 
         Timestamp startWallTime = new Timestamp(System.currentTimeMillis());
 
+        // Run four phases
         Phase phaseWarmUp = new Phase("Warmup", clientEndPoint, maxThreadNum, userNumber, dayNumber, testNumber);
         phaseWarmUp.run();
         Phase phaseLoading = new Phase("Loading", clientEndPoint, maxThreadNum, userNumber, dayNumber, testNumber);
@@ -54,9 +55,10 @@ public class MultiThreadCall {
 
         Timestamp endWallTime = new Timestamp(System.currentTimeMillis());
 
+        // Save results from four different phases together
         int totalRequest = phaseWarmUp.getTotalRequest() + phaseLoading.getTotalRequest()
                 + phasePeak.getTotalRequest() + phaseCooldown.getTotalRequest();
-        List<Double> totalLatency = new ArrayList<>();
+        List<Long> totalLatency = new ArrayList<>();
         totalLatency.addAll(phaseWarmUp.getLatencyList());
         totalLatency.addAll(phaseLoading.getLatencyList());
         totalLatency.addAll(phasePeak.getLatencyList());
@@ -68,33 +70,22 @@ public class MultiThreadCall {
         requestList.addAll(phasePeak.getRequestTimeList());
         requestList.addAll(phaseCooldown.getRequestTimeList());
 
-        // Calculate
+        // Calculate and process the latency
         LatencyStatistic latencyStatistic = new LatencyStatistic(totalRequest, totalLatency, requestList);
         latencyStatistic.processStatistic();
 
         int meanThroughput = latencyStatistic.getMeanThroughput();
-        int nintyFivePercentileThroughput = latencyStatistic.getNintyFivePercentileThroughput();
-        int nintyNinePercentileThroughput = latencyStatistic.getNintyNinePercentileThroughput();
+        long nintyFivePercentileLatency = latencyStatistic.getNintyFivePercentileLatency();
+        long nintyNinePercentileLatency = latencyStatistic.getNintyNinePercentileLatency();
 
         double totalWallTime = (endWallTime.getTime() - startWallTime.getTime()) / 1000.0;
 
-
-//        BigDecimal throughput = new BigDecimal(totalRequest / totalWallTime).setScale(2,2);
-//
         // Print out all statistic results
         System.out.println("===================================================");
         System.out.println("Total run time (wall time) for all threads to complete: " + totalWallTime + " seconds");
         System.out.println("Total number of requests sent: " + totalRequest);
         System.out.println("Mean throughput is: " + meanThroughput);
-        System.out.println("95th percentile throughput is: " + nintyFivePercentileThroughput);
-        System.out.println("99th percentile throughput is: " + nintyNinePercentileThroughput);
-
-//        System.out.println("Total number of Successful responses: " + totalResponse);
-//        System.out.println("Overall throughput across all phases: " + throughput);
-//        System.out.println("Mean latency is: " + latencyStatistic.getMeanLatency() / 1000.0 + " seconds. "
-//                + "Median latency is: " + latencyStatistic.getMedianLatency() / 1000.0 + " seconds.");
-//        System.out.println("99th percentile latency is: " + latencyStatistic.getNintyNinePercentile() / 1000.0 + " seconds. "
-//                + "95th percentile latency is: " + latencyStatistic.getNintyFivePercentile() / 1000.0 + " seconds.");
+        System.out.println("95th percentile latency is: " + nintyFivePercentileLatency / 1000.0);
+        System.out.println("99th percentile latency is: " + nintyNinePercentileLatency / 1000.0);
     }
-
 }
